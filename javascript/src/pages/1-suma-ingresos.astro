@@ -1,0 +1,171 @@
+---
+import HtmlLayout from "../layout/HtmlLayout.astro"
+import ProjectLayout from "../layout/ProjectLayout.astro"
+---
+
+<HtmlLayout>
+  <ProjectLayout>
+    <h1 class='text-xl md:text-3xl font-bold mb-10'>Suma de ingresos</h1>
+
+    <main class='flex md:flex-row flex-col gap-5 w-full'>
+      <section class='border rounded-md p-4 w-full md:w-4/12'>
+        <div id="seccion-registrar-presupuesto">
+          <label for='presupuesto' class='block mb-2'>Dinero total</label>
+          <input
+            class='border border-yellow-500 p-6 py-3 rounded-md w-full'
+            id='presupuesto'
+            type='number'
+          />
+          <button
+            id='btn-establecer-presupuesto'
+            class='bg-green-500 p-4 py-3 rounded-md hover:bg-green-600 block w-full mt-3 text-white disabled:opacity-50 disabled:cursor-not-allowed'
+          >
+            Establecer presupuesto
+          </button>
+        </div>
+
+        <div id="seccion-registar" class='hidden'>
+          <label for='presupuesto' class='block mb-2'>Registrar Gasto</label>
+          <input
+            class='border border-yellow-500 p-6 py-3 rounded-md w-full'
+            id='amount-gasto'
+            type='number'
+            placeholder='Cantidad'
+          />
+          <input
+            class='border border-yellow-500 p-6 py-3 rounded-md w-full mt-2'
+            id='concept-gasto'
+            placeholder='Concepto'
+          />
+          <button
+            id='btn-registrar-gasto'
+            class='bg-green-500 p-4 py-3 rounded-md hover:bg-green-600 block w-full mt-3 text-white'
+          >
+            Registrar
+          </button>
+        </div>
+
+        <button
+          id='btn-reset'
+          class='bg-red-500 p-4 py-3 rounded-md hover:bg-red-600 block w-full mt-10 text-white'
+        >
+          Restablecer
+        </button>
+      </section>
+
+      <section class='border rounded-md p-4 w-full md:w-8/12 relative'>
+        <h3 class='flex gap-2'>
+          <p class='text-green-500 font-bold text-2xl'>Presupuesto:</p>
+          <p class='text-2xl' id='presupuesto-amount'>$ 0</p>
+        </h3>
+        <div id="contenedor-gastos">
+          <template id='row'>
+            <div class='flex justify-between items-center border-b py-4 w-full'>
+              <p id='concept-label'>Transporte</p>
+              <p id='amount-label'>$ 300</p>
+            </div>
+          </template>
+        </div>
+        <p
+          id='alert-message'
+          class='text-red font-bold p-1 px-3 bg-red-500 rounded-full text-center text-white absolute bottom-3 right-3 left-3'
+        >
+          Mensaje de alerta
+        </p>
+      </section>
+    </main>
+  </ProjectLayout>
+</HtmlLayout>
+
+<script>
+  const $ = (selector) => document.querySelector(selector)
+
+  const $presupuesto = $("#presupuesto")
+  const $amountGasto = $("#amount-gasto")
+  const $conceptGasto = $("#concept-gasto")
+  const $alertMessage = $("#alert-message")
+
+  const $btnReset = $("#btn-reset")
+  const $btnEstablecerPresupuesto = $("#btn-establecer-presupuesto")
+  const $btnRegistrarGasto = $("#btn-registrar-gasto")
+
+  const $presupuestoAmount = $("#presupuesto-amount")
+  const $seccionRegistar = $("#seccion-registar")
+  const $seccionRegistarPresupuesto = $("#seccion-registrar-presupuesto")
+  const $contenedorGastos = $("#contenedor-gastos")
+
+  const $templateRow = $("#row")
+
+  let totalPresupuesto = 0
+
+  // Por defecto oculatamos el mensaje de alerta
+  $alertMessage.classList.add("hidden")
+
+  $btnEstablecerPresupuesto.addEventListener("click", () => {
+    if ($presupuesto.value === "") {
+      $alertMessage.textContent = "El presupuesto no puede estar vacío"
+      return
+    }
+
+    $seccionRegistar.classList.remove("hidden")
+    $seccionRegistarPresupuesto.classList.add("hidden")
+
+    $btnEstablecerPresupuesto.disabled = true
+    $presupuesto.disabled = true
+    totalPresupuesto = Number($presupuesto.value)
+
+    $presupuestoAmount.textContent = `$ ${totalPresupuesto}`
+
+    $alertMessage.textContent = ""
+    $alertMessage.classList.add("hidden")
+  })
+
+  $btnRegistrarGasto.addEventListener("click", () => {
+    if ($amountGasto.value === "" || $conceptGasto.value === "") {
+      $alertMessage.textContent = "Ambos campos son requeridos"
+      $alertMessage.classList.remove("hidden")
+      return
+    }
+
+    if (Number($amountGasto.value) > totalPresupuesto) {
+      $alertMessage.textContent = "El gasto no puede ser mayor al presupuesto"
+      $alertMessage.classList.remove("hidden")
+      return
+    }
+
+    totalPresupuesto -= Number($amountGasto.value)
+
+    $presupuestoAmount.textContent = `$ ${totalPresupuesto}`
+
+    const $row = $templateRow.content.cloneNode(true)
+    const $conceptLabel = $row.querySelector("#concept-label")
+    const $amountLabel = $row.querySelector("#amount-label")
+
+    $conceptLabel.textContent = $conceptGasto.value
+    $amountLabel.textContent = `$ ${$amountGasto.value}`
+
+    $templateRow.before($row)
+
+    $alertMessage.textContent = ""
+    $alertMessage.classList.add("hidden")
+  })
+
+  $btnReset.addEventListener("click", () => {
+    $presupuesto.value = ""
+    $amountGasto.value = ""
+    $conceptGasto.value = ""
+    $alertMessage.textContent = ""
+    $alertMessage.classList.add("hidden")
+
+    $contenedorGastos.innerHTML = ""
+
+    $seccionRegistar.classList.add("hidden")
+    $seccionRegistarPresupuesto.classList.remove("hidden")
+
+    $btnEstablecerPresupuesto.disabled = false
+    $presupuesto.disabled = false
+
+    totalPresupuesto = 0
+    $presupuestoAmount.textContent = `$ ${totalPresupuesto}`
+  })
+</script>

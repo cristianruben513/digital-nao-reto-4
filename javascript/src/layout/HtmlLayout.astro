@@ -1,0 +1,17 @@
+---
+import Background from "../components/background.astro"
+---
+
+<html lang='es'>
+  <head>
+    <meta charset='utf-8' />
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <meta name='viewport' content='width=device-width' />
+    <meta name='generator' content={Astro.generator} />
+    <title>MiniProyectos en JS</title>
+  </head>
+  <body class='flex w-full p-6 md:p-20'>
+    <Background />
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,55 @@
+---
+import HtmlLayout from "../layout/HtmlLayout.astro"
+import ProjectLayout from "../layout/ProjectLayout.astro"
+---
+
+<HtmlLayout>
+  <ProjectLayout>
+    <h1 class='text-xl md:text-3xl font-bold mb-10'>Audio a numero</h1>
+
+    <textarea
+      class='border border-yellow-500 p-6 py-3 rounded-md w-full'
+      id='texto-reconocido'
+      rows='4'
+      cols='50'
+    >
+    </textarea>
+
+    <button
+      id='start'
+      class='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 w-full mt-3'
+      >Iniciar
+    </button>
+  </ProjectLayout>
+</HtmlLayout>
+
+<script>
+  const $ = (selector) => document.querySelector(selector)
+
+  // Verificar si el navegador soporta la API de reconocimiento de voz
+  if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+    const textarea = $("#texto-reconocido")
+
+    // Crear objeto de reconocimiento de voz
+    const recognition = new (window.SpeechRecognition ||
+      window.webkitSpeechRecognition)()
+
+    // Configurar opciones
+    recognition.lang = "es-ES" // Establecer el idioma (español en este caso)
+
+    // Evento cuando se detecta texto reconocido
+    recognition.onresult = function (event) {
+      const texto = event.results[0][0].transcript // Obtener el texto reconocido
+      textarea.value += texto
+    }
+
+    // Iniciar el reconocimiento cuando se presiona un botón o se activa
+    function iniciarReconocimiento() {
+      recognition.start()
+    }
+
+    $("#start").addEventListener("click", iniciarReconocimiento)
+  } else {
+    alert("Tu navegador no soporta reconocimiento de voz.")
+  }
+</script>

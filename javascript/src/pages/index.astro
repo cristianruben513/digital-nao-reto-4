@@ -1,0 +1,42 @@
+---
+import HtmlLayout from "../layout/HtmlLayout.astro";
+import MainLayout from "../layout/MainLayout.astro";
+import ProyectCard from "../components/ProyectCard.astro";
+---
+
+<HtmlLayout>
+	<MainLayout>
+		<section class="grid md:grid-cols-3 gap-6">
+			<ProyectCard
+				title="Suma de ingresos"
+				desc="Esta aplicación permite sumar los ingresos de una persona, mostrando el total de los ingresos y el promedio de los mismos."
+				url="/1-suma-ingresos"
+			/>
+
+			<ProyectCard
+				title="Scroll infinito"
+				desc="Se muestra una lista de elementos, al llegar al final de la lista se cargan más elementos."
+				url="/2-scroll-infinito"
+			/>
+
+			<ProyectCard
+				title="Juego Breakout"
+				desc="El objetivo del juego es destruir todos los bloques de la pantalla con una bola que rebota en una paleta"
+				url="/3-juego-breakout"
+			/>
+
+			<ProyectCard
+				title="Cuenta regresiva"
+				desc="Se muestra una cuenta regresiva que finaliza en una fecha y hora determinada."
+				url="/4-cuenta-regresiva"
+			/>
+
+			<ProyectCard
+				title="Audio a numero"
+				desc="Se muestra un input que permite ingresar un número y al presionar un botón se reproduce el audio del número ingresado."
+				url="/5-audio-a-numero"
+			/>
+
+		</section>
+	</MainLayout>
+</HtmlLayout>

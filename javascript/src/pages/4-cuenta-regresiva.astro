@@ -1,0 +1,108 @@
+---
+import HtmlLayout from "../layout/HtmlLayout.astro"
+import ProjectLayout from "../layout/ProjectLayout.astro"
+---
+
+<HtmlLayout>
+  <ProjectLayout>
+    <h1 class='text-xl md:text-3xl font-bold mb-10'>Cuenta regresiva</h1>
+
+    <form id='countdownForm' class='space-y-4'>
+      <section class="grid grid-cols-3 gap-4">
+        <div class='flex flex-col'>
+          <label class='block' for='hours'>Horas:</label>
+          <input
+            type='number'
+            id='hours'
+            name='hours'
+            class='px-3 py-2 border rounded-md w-full'
+            min='0'
+            max='999'
+            value='0'
+            required
+          />
+        </div>
+        <div class='flex flex-col'>
+          <label class='block' for='minutes'>Minutos:</label>
+          <input
+            type='number'
+            id='minutes'
+            name='minutes'
+            class='px-3 py-2 border rounded-md w-full'
+            min='0'
+            max='59'
+            value='0'
+            required
+          />
+        </div>
+        <div class='flex flex-col'>
+          <label class='block' for='seconds'>Segundos:</label>
+          <input
+            type='number'
+            id='seconds'
+            name='seconds'
+            class='px-3 py-2 border rounded-md w-full'
+            min='0'
+            max='59'
+            required
+          />
+        </div>
+      </section>
+
+      <button
+        type='submit'
+        class='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 w-full'
+        >Iniciar</button
+      >
+    </form>
+    <div id='countdown' class='text-4xl md:text-6xl font-bold text-center mt-24'></div>
+  </ProjectLayout>
+</HtmlLayout>
+
+<script>
+  const $ = (selector) => document.querySelector(selector)
+
+  document
+    .getElementById("countdownForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault()
+
+      // Obtener los valores de horas, minutos y segundos
+
+      const hours = parseInt($("#hours").value)
+      const minutes = parseInt($("#minutes").value)
+      const seconds = parseInt($("#seconds").value)
+
+      // Calcular el total de segundos
+      let totalSeconds = hours * 3600 + minutes * 60 + seconds
+
+      // Actualizar la cuenta regresiva cada segundo
+      let countdown = setInterval(function () {
+        // Verificar si quedan segundos
+        if (totalSeconds <= 0) {
+          clearInterval(countdown) // Detener la cuenta regresiva
+          document.getElementById("countdown").textContent =
+            "¡Tiempo finalizado!"
+          return
+        }
+
+        // Calcular días, horas, minutos y segundos restantes
+        let days = Math.floor(totalSeconds / (3600 * 24))
+        let hoursLeft = Math.floor((totalSeconds % (3600 * 24)) / 3600)
+        let minutesLeft = Math.floor((totalSeconds % 3600) / 60)
+        let secondsLeft = totalSeconds % 60
+
+        // Mostrar la cuenta regresiva en el formato deseado
+        if (days > 0) {
+          document.getElementById("countdown").textContent =
+            `${days}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`
+        } else {
+          document.getElementById("countdown").textContent =
+            `${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`
+        }
+
+        // Reducir un segundo
+        totalSeconds--
+      }, 1000) // Se ejecuta cada segundo (1000 milisegundos)
+    })
+</script>
