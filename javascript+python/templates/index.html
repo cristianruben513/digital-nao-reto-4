@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Paint</title>
+</head>
+
+<body class="flex w-full p-6 md:p-20">
+  <div
+    class='fixed inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#EEF201)]'>
+  </div>
+
+  <main class="w-full mx-auto md:max-w-5xl ">
+    <h1 class='text-xl md:text-3xl font-bold mb-10'>Pizzara Virtual</h1>
+
+    <div class="grid grid-cols-4 gap-10">
+      <section class="col-span-3">
+        <div class="border rounded-xl overflow-hidden border-2 border-black">
+          <canvas class="bg-white" id="maincanvas" width="900" height="400"></canvas>
+        </div>
+      </section>
+
+      <section class="col-span-1">
+        <div class="grid gap-2">
+          Colores disponibles
+          <div class="flex gap-2">
+            <button id="red"
+              class="size-10 bg-red-600 disabled:opacity-70 disable:cursor-not-allowed cursor-pointer"></button>
+            <button id="blue"
+              class="size-10 bg-blue-600 disabled:opacity-70 disable:cursor-not-allowed cursor-pointer"></button>
+            <button id="green"
+              class="size-10 bg-green-600 disabled:opacity-70 disable:cursor-not-allowed cursor-pointer"></button>
+            <button id="black"
+              class="size-10 bg-black disabled:opacity-70 disable:cursor-not-allowed cursor-pointer"></button>
+          </div>
+
+          <p>
+            <span>Color Seleccionado:</span>
+            <span class="font-bold" id="colorLabel"></span>
+          </p>
+
+          <a class="p-4 rounded-md bg-red-600 text-white py-2 mt-10 w-full " href="/">
+            Restablecer
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+
+  <script>
+    const mainCanvas = document.getElementById("maincanvas");
+    const context = mainCanvas.getContext("2d");
+    const redButton = document.getElementById("red");
+    const blueButton = document.getElementById("blue");
+    const greenButton = document.getElementById("green");
+    const blackButton = document.getElementById("black");
+
+    const colorLabel = document.getElementById("colorLabel");
+
+    // colores
+    let red = '#FF0000'
+    let blue = '#0000FF'
+    let green = '#00FF00'
+    let black = '#000000'
+
+    let currentColor = red;
+    colorLabel.innerText = "Rojo"
+    colorLabel.classList.add('text-red-600')
+
+    redButton.addEventListener("click", () => {
+      currentColor = red;
+      colorLabel.innerText = "Rojo"
+      colorLabel.classList.add('text-red-600')
+    });
+
+    blueButton.addEventListener("click", () => {
+      currentColor = blue;
+      colorLabel.innerText = "Blue"
+      colorLabel.classList.add('text-blue-600')
+    });
+
+    greenButton.addEventListener("click", () => {
+      currentColor = green;
+      colorLabel.innerText = "Verde"
+      colorLabel.classList.add('text-green-600')
+    });
+
+    blackButton.addEventListener("click", () => {
+      currentColor = black;
+      colorLabel.innerText = "Negro"
+      colorLabel.classList.add('text-black')
+    });
+
+    let initialX;
+    let initialY;
+    let correccionX = 0;
+    let correccionY = 0;
+
+    let posicion = mainCanvas.getBoundingClientRect();
+    correccionX = posicion.x;
+    correccionY = posicion.y;
+
+    const dibujar = (cursorX, cursorY) => {
+      context.beginPath();
+      context.moveTo(initialX, initialY);
+      context.lineWidth = 5;
+      context.strokeStyle = currentColor;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.lineTo(cursorX, cursorY);
+      context.stroke();
+
+      initialX = cursorX;
+      initialY = cursorY;
+    };
+
+    const mouseDown = (evt) => {
+      //evt.preventDefault();
+      initialX = evt.offsetX;
+      initialY = evt.offsetY;
+      dibujar(initialX, initialY);
+      mainCanvas.addEventListener("mousemove", mouseMoving);
+    };
+
+    const mouseMoving = (evt) => {
+      evt.preventDefault();
+      dibujar(evt.offsetX, evt.offsetY);
+    };
+
+    const mouseUp = () => {
+      mainCanvas.removeEventListener("mousemove", mouseMoving);
+    };
+
+    mainCanvas.addEventListener("mousedown", mouseDown);
+    mainCanvas.addEventListener("mouseup", mouseUp);
+
+  </script>
+
+</body>
+
+</html>

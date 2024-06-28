@@ -3,7 +3,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://listado.mercadolibre.com.mx/ps5"
+url = "https://listado.mercadolibre.com.mx/celulares"
 
 response = requests.get(url)
 
